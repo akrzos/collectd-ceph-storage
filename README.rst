@@ -1,8 +1,7 @@
 Collectd Ceph Storage
 =====================
 
-Yet another Ceph Collectd Plugin in Python
-
+|collectd-ceph-storage|
 
 Overview
 --------
@@ -50,3 +49,67 @@ Metrics
 | collectd-ceph-storage-pool-(pool name)/gauge-write_bytes_sec
 | collectd-ceph-storage-pool-(pool name)/gauge-write_op_per_sec
 | collectd-ceph-storage-pool/gauge-number
+
+Install / Configuration
+-----------------------
+
+1. Assuming you have collectd installed already, append the following
+   plugin details to your collectd.conf config file.  Adjust the
+   configuration items as you see fit.  The plugin must be able to
+   subprocess the ceph and rados commands.
+
+   ::
+
+       ```
+       <LoadPlugin python>
+         Globals true
+       </LoadPlugin>
+
+       <Plugin python>
+         LogTraces true
+         Interactive false
+         Import "collectd_ceph_storage"
+         <Module collectd_ceph_storage>
+           CephCluster "ceph"
+
+           CephRadosBench False
+           CephRadosBenchInterval 60
+           CephMONStats True
+           CephMONStatsInterval 10
+           CephOSDStats True
+           CephOSDStatsInterval 10
+           CephPGStats True
+           CephPGStatsInterval 10
+           CephPoolStats True
+           CephPoolStatsInterval 10
+         </Module>
+       </Plugin>
+       ```
+
+2. Install plugin
+
+   ::
+
+       ```
+       [root@overcloud-controller-0 ~]# pip install collectd-ceph-storage
+       ```
+
+3. Restart collectd
+
+   ::
+
+       [root@overcloud-controller-0 ~]# systemctl restart collectd
+
+4. View metrics on Ceph in your TSDB
+
+Resources
+---------
+
+1. `Ceph.com`_
+2. `Collectd.org`_
+
+.. _Ceph.com: https://ceph.com/
+.. _Collectd.org: https://collectd.org/
+
+.. |collectd-ceph-storage| image:: https://badge.fury.io/py/collectd-ceph-storage.svg
+    :target: https://pypi.python.org/pypi/collectd-ceph-storage
